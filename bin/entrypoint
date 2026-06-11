@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+[[ -n ${DEBUG} ]] && set -x
+
+set -e
+
+run_ogmios() {
+	CARDANO_CONFIG_BASE=${CARDANO_CONFIG_BASE:-/opt/cardano/config}
+	CARDANO_NETWORK=${CARDANO_NETWORK:-${NETWORK:-mainnet}}
+	CARDANO_CONFIG=${CARDANO_CONFIG:-${CARDANO_CONFIG_BASE}/${CARDANO_NETWORK}/config.json}
+	CARDANO_SOCKET_PATH=${CARDANO_SOCKET_PATH:-/ipc/node.socket}
+	OGMIOS_HOST=${OGMIOS_HOST:-0.0.0.0}
+	OGMIOS_PORT=${OGMIOS_PORT:-1337}
+
+	echo CARDANO_CONFIG=${CARDANO_CONFIG}
+	echo CARDANO_NETWORK=${CARDANO_NETWORK}
+	echo CARDANO_SOCKET_PATH=${CARDANO_SOCKET_PATH}
+	echo OGMIOS_HOST=${OGMIOS_HOST}
+	echo OGMIOS_PORT=${OGMIOS_PORT}
+
+	effopts=(--host "${OGMIOS_HOST}" \
+		--port "${OGMIOS_PORT}" \
+		--node-config "${CARDANO_CONFIG}" \
+		--node-socket "${CARDANO_SOCKET_PATH}")
+
+	exec /usr/local/bin/ogmios "${effopts[@]}" "${@}"
+}
+
+if [[ $# -eq 0 ]]; then
+	set -- run
+fi
+
+case ${1} in
+	run)
+		shift
+		run_ogmios "${@}"
+		;;
+	ogmios)
+		shift
+		exec /usr/local/bin/ogmios "${@}"
+		;;
+	health-check|inspect|version|--version|-v)
+		exec /usr/local/bin/ogmios "${@}"
+		;;
+	-*)
+		run_ogmios "${@}"
+		;;
+	*)
+		exec "${@}"
+		;;
+esac
