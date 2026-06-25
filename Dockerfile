@@ -20,7 +20,7 @@ RUN echo "Building tags/${OGMIOS_VERSION}..." \
     && rm -rf /code/ogmios/server/dist-newstyle/ \
     && rm -rf /root/.cabal/store/ghc-${GHC_VERSION}
 
-FROM ghcr.io/blinklabs-io/cardano-configs:20260605-1 AS cardano-configs
+FROM ghcr.io/blinklabs-io/cardano-configs:20260623-1 AS cardano-configs
 
 FROM debian:bookworm-slim AS ogmios
 ENV LD_LIBRARY_PATH="/usr/local/lib"
