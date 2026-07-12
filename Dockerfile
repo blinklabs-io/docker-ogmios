@@ -1,4 +1,4 @@
-FROM ghcr.io/blinklabs-io/haskell:9.6.7-3.12.1.0-3 AS ogmios-build
+FROM ghcr.io/blinklabs-io/haskell:9.12.3-3.14.2.0-1 AS ogmios-build
 # Install ogmios
 ARG OGMIOS_VERSION=v6.14.0.2
 ENV OGMIOS_VERSION=${OGMIOS_VERSION}
